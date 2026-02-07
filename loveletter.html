@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forever, Us — A Love Letter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Dancing+Script:wght@400;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { 
+  font-family: 'Cormorant Garamond', serif; 
+  overflow-x: hidden; 
+  background: #0a0a12;
+  color: #fff;
+}
+
+/* ========== BOKEH / PARTICLE BACKGROUND ========== */
+.bokeh-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -2;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a0a1a 30%, #0a0a2a 60%, #1a0a0a 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.bokeh-lights {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bokeh-dot {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.4;
+  animation: bokehFloat 8s ease-in-out infinite;
+}
+.bokeh-dot:nth-child(1) { width: 150px; height: 150px; background: rgba(100, 100, 255, 0.5); top: 10%; left: 15%; animation-delay: 0s; }
+.bokeh-dot:nth-child(2) { width: 120px; height: 120px; background: rgba(255, 80, 100, 0.5); top: 60%; right: 20%; animation-delay: 2s; }
+.bokeh-dot:nth-child(3) { width: 100px; height: 100px; background: rgba(150, 100, 255, 0.4); bottom: 20%; left: 30%; animation-delay: 4s; }
+.bokeh-dot:nth-child(4) { width: 80px; height: 80px; background: rgba(255, 100, 120, 0.4); top: 30%; right: 35%; animation-delay: 1s; }
+.bokeh-dot:nth-child(5) { width: 60px; height: 60px; background: rgba(100, 150, 255, 0.4); bottom: 40%; left: 60%; animation-delay: 3s; }
+@keyframes bokehFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(20px, -20px) scale(1.1); opacity: 0.6; }
+}
+
+/* ========== PAGES ========== */
+.page {
+  min-height: 100vh;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 30px;
+  position: relative;
+  transition: opacity 1.5s ease;
+}
+.page.active {
+  display: flex;
+  animation: pageFadeIn 1.5s ease forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ========== PAGE TITLES ========== */
+.page-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 40px rgba(255, 215, 180, 0.5);
+  letter-spacing: 0.15em;
+  margin-bottom: 40px;
+  z-index: 10;
+}
+.page-title.gold { color: rgba(255, 220, 180, 0.98); text-shadow: 0 0 30px rgba(255, 200, 150, 0.6); }
+.page-title.handwritten { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 4.5vw, 3.8rem); }
+.page-title.glowing { 
+  text-shadow: 0 0 20px rgba(255, 100, 120, 0.8), 0 0 40px rgba(100, 100, 255, 0.5);
+  color: #fff;
+}
+
+/* ========== IMAGE FRAME – object-fit contain, preserve aspect ratio ========== */
+.img-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 30, 0.6);
+  overflow: hidden;
+}
+.img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* ========== PAGE 1 — OUR FIRST MEMORIES (8 PICTURES COLLAGE) ========== */
+.memories-collage {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+.collage-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 100, 120, 0.15);
+  animation: collageAppear 1.2s ease backwards;
+  background: rgba(15, 15, 40, 0.8);
+}
+.collage-item:nth-child(1) { animation-delay: 0.1s; }
+.collage-item:nth-child(2) { animation-delay: 0.2s; }
+.collage-item:nth-child(3) { animation-delay: 0.3s; }
+.collage-item:nth-child(4) { animation-delay: 0.4s; }
+.collage-item:nth-child(5) { animation-delay: 0.5s; }
+.collage-item:nth-child(6) { animation-delay: 0.6s; }
+.collage-item:nth-child(7) { animation-delay: 0.7s; }
+.collage-item:nth-child(8) { animation-delay: 0.8s; }
+@keyframes collageAppear {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.collage-item .img-frame {
+  height: 180px;
+}
+.collage-item img {
+  transition: transform 8s ease, filter 3s ease;
+}
+.collage-item:hover img,
+.collage-item.zoomed img {
+  transform: scale(1.08);
+  filter: brightness(1.1) contrast(1.05);
+}
+.collage-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.2) 100%);
+  pointer-events: none;
+}
+.collage-item .cinematic-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 60px rgba(255, 200, 180, 0.1);
+  pointer-events: none;
+}
+.collage-item .depth-blur {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at center, transparent 50%, rgba(0, 0, 0, 0.15) 100%);
+  pointer-events: none;
+}
+.page-1 .page-bg {
+  background: linear-gradient(135deg, rgba(30, 20, 80, 0.4) 0%, rgba(80, 20, 50, 0.4) 100%);
+}
+
+/* ========== PAGE 2 — HER FAVORITE MOMENTS (12 PICTURES) ========== */
+.cinematic-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  height: 480px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 80px rgba(100, 50, 255, 0.2);
+  background: rgba(10, 15, 40, 0.9);
+}
+.cinematic-slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 2s ease;
+  z-index: 1;
+}
+.cinematic-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+.cinematic-slide .img-frame {
+  position: absolute;
+  inset: 0;
+}
+.cinematic-slide img {
+  animation: kenBurns 12s ease-in-out infinite alternate;
+}
+.cinematic-slide.active img {
+  animation: kenBurns 12s ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.1) translate(-2%, -2%); }
+}
+.vignette-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+.lens-flare {
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+  z-index: 4;
+  animation: flarePulse 4s ease-in-out infinite;
+}
+.light-leak {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 80, 100, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: 4;
+  animation: lightLeak 6s ease-in-out infinite;
+}
+.light-leak.top-left { top: -20px; left: -20px; }
+.light-leak.bottom-right { bottom: -20px; right: -20px; animation-delay: 2s; }
+@keyframes lightLeak {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@keyframes flarePulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+}
+.page-2 .page-bg {
+  background: linear-gradient(180deg, rgba(10, 15, 50, 0.5) 0%, rgba(40, 10, 30, 0.5) 100%);
+}
+
+/* ========== PAGE 3 — OUR LATEST MEMORIES (10 PICTURES) ========== */
+.journey-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  height: 500px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 80, 100, 0.2);
+  background: rgba(15, 10, 35, 0.9);
+}
+.journey-slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 2.5s ease;
+  z-index: 1;
+}
+.journey-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+.journey-slide .img-frame {
+  position: absolute;
+  inset: 0;
+}
+.journey-slide img {
+  animation: gentleZoom 15s ease-in-out infinite;
+}
+@keyframes gentleZoom {
+  0%, 100% { transform: scale(1.02); }
+  50% { transform: scale(1.08); }
+}
+.light-streak {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(255, 150, 180, 0.2), transparent);
+  top: 0;
+  left: 30%;
+  animation: streakMove 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+.light-streak:nth-child(2) { left: 60%; animation-delay: 3s; }
+@keyframes streakMove {
+  0%, 100% { opacity: 0.3; transform: translateX(0); }
+  50% { opacity: 0.8; transform: translateX(20px); }
+}
+.page-3 .page-bg {
+  background: linear-gradient(135deg, rgba(50, 20, 40, 0.4) 0%, rgba(20, 30, 60, 0.4) 100%);
+}
+/* Reveal Letter Button & Hidden Letter */
+.letter-container {
+  margin-top: 30px;
+  text-align: center;
+}
+.letter-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh; /* full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* start from top */
+  align-items: flex-end; /* align to right edge */
+  padding: 20px;
+  z-index: 1000;
+}
+
+.reveal-letter-btn {
+  padding: 12px 28px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(8px);
+  margin-bottom: 20px; /* spacing below the button */
+}
+
+.reveal-letter-btn:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 20px rgba(255,100,150,0.3);
+}
+
+.hidden-letter {
+  display: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255,235,220,0.9);
+  max-width: 350px;
+  text-align: right;
+  letter-spacing: 0.05em;
+}
+
+
+/* ========== PAGE 4 — FOREVER US FINALE ========== */
+.forever-page {
+  background: linear-gradient(135deg, rgba(20, 15, 50, 0.8) 0%, rgba(50, 15, 35, 0.8) 50%, rgba(15, 25, 50, 0.8) 100%);
+}
+.forever-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: 
+    0 0 30px rgba(255, 180, 200, 0.8),
+    0 0 60px rgba(150, 100, 255, 0.5),
+    0 0 90px rgba(255, 100, 120, 0.4);
+  animation: foreverGlow 4s ease-in-out infinite alternate;
+}
+@keyframes foreverGlow {
+  from { text-shadow: 0 0 30px rgba(255, 180, 200, 0.6), 0 0 50px rgba(150, 100, 255, 0.4); }
+  to { text-shadow: 0 0 50px rgba(255, 200, 220, 0.9), 0 0 80px rgba(180, 120, 255, 0.6); }
+}
+.forever-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-top: 24px;
+  color: rgba(255, 220, 200, 0.8);
+  letter-spacing: 0.2em;
+}
+.forever-letter {
+  max-width: 560px;
+  margin: 30px auto 0;
+  padding: 24px 32px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 235, 220, 0.9);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* ========== NAVIGATION ========== */
+.nav-buttons {
+  margin-top: 50px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.nav-btn {
+  padding: 14px 32px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 30px rgba(255, 100, 150, 0.3);
+}
+
+/* ========== MUSIC BUTTON ========== */
+.music-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.music-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+.music-btn.muted { opacity: 0.6; }
+
+/* ========== PAGE BG OVERLAY ========== */
+.page-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .memories-collage {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+  .collage-item .img-frame { height: 140px; }
+  .cinematic-slideshow, .journey-slideshow { height: 350px; }
+}
+.thoughts-container {
+  max-width: 700px;
+  background: rgba(255, 220, 200, 0.05);
+  padding: 30px 40px;
+  border-radius: 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 235, 220, 0.9);
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+</style>
+</head>
+<body>
+</div>
+
+
+<div class="bokeh-bg"></div>
+<div class="bokeh-lights">
+  <div class="bokeh-dot"></div>
+  <div class="bokeh-dot"></div>
+  <div class="bokeh-dot"></div>
+  <div class="bokeh-dot"></div>
+  <div class="bokeh-dot"></div>
+</div>
+
+<audio id="music" loop>
+  <source src="Uuwian.mp3" type="audio/mpeg">
+</audio>
+<div class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Toggle music">♪</div>
+
+<!-- HOMEPAGE — All My Thoughts -->
+<!-- HOMEPAGE — All My Thoughts -->
+<section class="page page-home active" id="homepage">
+  <div class="page-bg"></div>
+  <h2 class="page-title handwritten">Happy Valentine's day Babyyy!</h2>
+  <div class="thoughts-container">
+    <p>
+        <BR>CLICK KA ANYWHERE PARA MAG PLAY MUSIC SYEMPRE PARA MAS DAMA MO DI BA? HEHE SORRY NA</BR>
+      I just want to say thank you for everything for all the care, love, and effort you give me
+      every day. I know I don’t always show it the same way, and I’m sorry if I ever make you feel
+      like it’s not enough. We just have different ways of showing love, but that doesn’t change
+      how much I love you. I really do, more than I can even say.
+      Sometimes I might seem a little cold or distant, but that doesn’t mean I don’t want you.
+      might just have a lot on my mind at that moment. Thank you for understanding me and
+      being patient, even when I’m not at my best. I hope your patience lasts even longer,
+      because I never want you to feel worse when I’m upset.
+      <br><br>
+     I’m so thankful for your presence in my life. Being by your side makes me happy in ways I
+     can’t even explain. I feel safe and loved with you, and I want you to know that no matter
+      what, I’ll never be your enemy. Everyone else may challenge you, but I’ll always be the one on your side.
+      I love you, baby, more than words can say. I’m so lucky to have you, and I hope we can keep making memories together, laughing together, and loving each other every single day.
+    </p>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="nextPage()">Continue →</button>
+  </div>
+</section>
+
+
+
+<!-- PAGE 1 — Our First Memories -->
+<section class="page page-1" id="page1">
+  <div class="page-bg"></div>
+  <h2 class="page-title gold">Our First Memories</h2>
+  <div class="memories-collage">
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/a.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/b.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/c.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/d.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/e.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/f.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/g.jpg" alt="Memory"></div></div>
+    <div class="collage-item"><div class="cinematic-glow"></div><div class="depth-blur"></div><div class="img-frame"><img src="images/u.jpg" alt="Memory"></div></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="nextPage()">Continue →</button>
+  </div>
+  <div class="letter-container">
+  <button class="reveal-letter-btn" onclick="revealLetter(this)">Mini eme 💌</button>
+  <p class="hidden-letter">Tinitignan ko lang to sa tuwing namimiss ko yung smah days natin na araw araw magkasama at lagi sabay umuuwi, buo lagi araw ko nung time na yan kase bukod sa magkasama tayo buong araw ay for sure na mag fofoodtrip tayo bago umuwi, GOOD OLD DAYS!</p>
+</div>
+
+</section>
+
+<!-- PAGE 2 — Her Favorite Moments -->
+<section class="page page-2" id="page2">
+  <div class="page-bg"></div>
+  <h2 class="page-title handwritten">My Favorite Pictures of You</h2>
+  <div class="cinematic-slideshow">
+    <div class="cinematic-slide active"><div class="img-frame"><img src="fav/favpic.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic1.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic2.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic3.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic4.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic5.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic6.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic7.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic8.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic9.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic10.jpg" alt="Favorite moment"></div></div>
+    <div class="cinematic-slide"><div class="img-frame"><img src="fav/favpic11.jpg" alt="Favorite moment"></div></div>
+    <div class="vignette-overlay"></div>
+    <div class="lens-flare"></div>
+    <div class="light-leak top-left"></div>
+    <div class="light-leak bottom-right"></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="prevPage()">← Back</button>
+    <button class="nav-btn" onclick="nextPage()">Continue →</button>
+  </div>
+  <div class="letter-container">
+  <button class="reveal-letter-btn" onclick="revealLetter(this)">Mini eme 💌</button>
+  <p class="hidden-letter">Eto yung mga pictures mo na gustong gusto ko oops lahat ng pics mo gusto ko ah, tinitignan ko mga to kapag miss na miss kita o kapag malungkot ako. Syempre san pa ba ako kukuha ng kasiyahan edi sa maganda mong mukha? sheeshh kinilig!</p>
+</div>
+
+</section>
+
+<!-- PAGE 3 — Our Latest Memories -->
+<section class="page page-3" id="page3">
+  <div class="page-bg"></div>
+  <h2 class="page-title glowing">Our Journey Continues</h2>
+  <div class="journey-slideshow">
+    <div class="light-streak"></div>
+    <div class="light-streak"></div>
+    <div class="journey-slide active"><div class="img-frame"><img src="latest/1.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/2.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/3.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/4.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/5.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/6.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/7.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/1213.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/fav.jpg" alt="Our journey"></div></div>
+    <div class="journey-slide"><div class="img-frame"><img src="latest/h.jpg" alt="Our journey"></div></div>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="prevPage()">← Back</button>
+    <button class="nav-btn" onclick="nextPage()">Continue →</button>
+  </div>
+  <div class="letter-container">
+  <button class="reveal-letter-btn" onclick="revealLetter(this)">Mini eme💌</button>
+  <p class="hidden-letter">Oh di ba glow up tayo parehas dito sheshh, di ako mag sasawa sa pagmumuka mo! tuwing tinitignan ko pics natin ngayon mapapaisip ka nalang na ang layo na pala ng narating natin mula sa dating tayo, sana walang magbago, kung iniisip mo na umalis utot walang undo dito mwa!</p>
+</div>
+
+</section>
+
+<!-- PAGE 4 — Forever Us -->
+<section class="page forever-page" id="page4">
+  <h2 class="forever-title">Forever, Us</h2>
+  <p class="forever-subtitle">always & always</p>
+  <p class="forever-letter" id="loveLetterText">Every moment with you is a treasure. Thank you for the memories, the laughter, and the love. Here's to many more pages in our story. With all my heart, forever yours.</p>
+</section>
+
+<script>
+const pages = document.querySelectorAll('.page');
+let currentPage = 0;
+
+function showPage(index) {
+  pages.forEach((p, i) => p.classList.toggle('active', i === index));
+  currentPage = index;
+  
+  // Fade out music when reaching the finale
+  const music = document.getElementById('music');
+  if (index === pages.length - 1) {
+    fadeOutMusic(music, 15000);
+  }
+}
+
+function fadeOutMusic(audio, duration) {
+  const startVol = audio.volume;
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    audio.volume = Math.max(0, startVol * (1 - progress));
+    if (progress < 1) requestAnimationFrame(step);
+    else audio.pause();
+  }
+  requestAnimationFrame(step);
+}
+
+function nextPage() {
+  if (currentPage < pages.length - 1) showPage(currentPage + 1);
+}
+
+function prevPage() {
+  if (currentPage > 0) showPage(currentPage - 1);
+}
+
+// Collage gentle zoom effect – soft cinematic feel
+document.querySelectorAll('.collage-item').forEach((item, i) => {
+  setInterval(() => {
+    item.classList.toggle('zoomed', Math.random() > 0.7);
+  }, 3000 + i * 500);
+});
+
+// Page 2 slideshow (12 images) – smooth crossfades
+const favSlides = document.querySelectorAll('.cinematic-slideshow .cinematic-slide');
+let favIndex = 0;
+setInterval(() => {
+  favSlides[favIndex].classList.remove('active');
+  favIndex = (favIndex + 1) % favSlides.length;
+  favSlides[favIndex].classList.add('active');
+}, 4500);
+
+// Page 3 slideshow (10 images) – elegant transitions
+const journeySlides = document.querySelectorAll('.journey-slideshow .journey-slide');
+let journeyIndex = 0;
+setInterval(() => {
+  journeySlides[journeyIndex].classList.remove('active');
+  journeyIndex = (journeyIndex + 1) % journeySlides.length;
+  journeySlides[journeyIndex].classList.add('active');
+}, 5000);
+
+// Music – auto-play on first user interaction
+const music = document.getElementById('music');
+const musicBtn = document.getElementById('musicBtn');
+music.volume = 0.7;
+
+function toggleMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+    musicBtn.classList.remove('muted');
+  } else {
+    music.pause();
+    musicBtn.classList.add('muted');
+  }
+}
+
+// Auto-start music on first click anywhere (for better UX)
+let musicStarted = false;
+document.addEventListener('click', function startMusicOnce() {
+  if (!musicStarted && music.paused) {
+    music.play().catch(() => {});
+    musicBtn.classList.remove('muted');
+    musicStarted = true;
+  }
+}, { once: true });
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') nextPage();
+  if (e.key === 'ArrowLeft') prevPage();
+});
+
+function revealLetter(btn) {
+  const letter = btn.nextElementSibling;
+  if (letter.style.display === "none" || letter.style.display === "") {
+    letter.style.display = "block";
+    btn.style.display = "none"; // hide the button after revealing
+  }
+}
+
+</script>
+</body>
+</html>
